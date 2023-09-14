@@ -1,0 +1,2 @@
+MSH|^~\&||HSPTL|APP_HSPTL-ORM^^^ORL^O25^ORL_O25||M|||John^John&Van&Doe||||ISO
+PID|Lorem Ipsum|Test|HSPTL|^^&12345|John&&Doe^Name1^^^^^L|gtfgfgdfdgf|123456789||^^^^43434|||||||||dfdfef4444
