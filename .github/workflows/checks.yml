@@ -48,4 +48,4 @@ jobs:
           pip install poetry==1.5.1
           poetry install
       - run: |
-          python -m pytest .
+          pytest .
