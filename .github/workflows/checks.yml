@@ -37,8 +37,6 @@ jobs:
           ls -la
           isort --profile black --check-only .      
   unit-tests:
-    # This check should be adjusted, mounting the code base
-    # into the container, do poetry install and running the tests.
     runs-on: ubuntu-20.04
     needs: [isort, flake8, black, bandit]
     steps:
