@@ -48,6 +48,5 @@ jobs:
           pip install poetry==1.5.1
           python -m poetry install
           pip install pytest==7.4.2
-          python -m pytest --version
-#      - run: |
-#          pytest .
+      - run: |
+          pytest .
