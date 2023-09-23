@@ -6,7 +6,8 @@ def test_convert_to_hl7():
         hl7_content = csv_to_hl7(csv_content=f.read())
         assert hl7_content.startswith("MSH")
         assert (
-            "PID|Lorem Ipsum|Test|HSPTL|^^&12345|John&&Doe^Name1^^^^^L" in hl7_content
+            "PID|Lorem Ipsum|Test|HSPTL|^^&12345|John&&Doe^Name1^^^^^L"
+            in hl7_content
         )
 
 

@@ -27,7 +27,12 @@ def _to_hl7(hl7_data: Dict[str, List[List[str]]]) -> str:
     for segment_name, segment_data in hl7_data.items():
         segment_value = "|".join(
             [
-                "^".join(["&".join([l3 or "" for l3 in l2 or []]) for l2 in l1 or []])
+                "^".join(
+                    [
+                        "&".join([l3 or "" for l3 in l2 or []])
+                        for l2 in l1 or []
+                    ]
+                )
                 for l1 in segment_data
             ]
         )
@@ -83,7 +88,9 @@ def _convert(content: str) -> Dict[str, List[List[str]]]:
                 [None] * (index_l3 + 1 - len(l3_list))
             )
         else:
-            hl7_data[segment_name][index_l1][index_l2] = [None] * (index_l3 + 1)
+            hl7_data[segment_name][index_l1][index_l2] = [None] * (
+                index_l3 + 1
+            )
 
     for segment_name, index, value in data:
         index_l1, index_l2, index_l3 = _hl7_index_split(index)

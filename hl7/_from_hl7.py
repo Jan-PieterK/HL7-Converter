@@ -30,7 +30,9 @@ def hl7_to_csv(hl7_content: str) -> str:
         "\n".join(
             map(
                 lambda csv_line: ";".join(csv_line),
-                _convert(hl7_content=_prepare_hl7_content(hl7_content=hl7_content)),
+                _convert(
+                    hl7_content=_prepare_hl7_content(hl7_content=hl7_content)
+                ),
             )
         )
     )
@@ -70,7 +72,9 @@ def _convert(hl7_content: str) -> Iterator[Tuple[str, str, str, str]]:
                     continue
                 description = _get_description(segment_name, index1, index2)
                 if "&" in field2:
-                    for index3, fields3 in enumerate(field2.split("&"), start=1):
+                    for index3, fields3 in enumerate(
+                        field2.split("&"), start=1
+                    ):
                         yield segment_name, f"{index1}.{index2}.{index3}", fields3, description
                 else:
                     yield segment_name, f"{index1}.{index2}", field2, description
@@ -84,9 +88,9 @@ def _prepare_hl7_content(hl7_content: str) -> str:
 
 
 def _prepare_csv_content(csv_content: str) -> str:
-    return csv_content.replace(_ENCODING_CHARS_FIELD, _ENCODING_CHARACTERS_STR).replace(
-        _FIELD_SEPARATOR_FIELD, FIELD_SEPARATOR
-    )
+    return csv_content.replace(
+        _ENCODING_CHARS_FIELD, _ENCODING_CHARACTERS_STR
+    ).replace(_FIELD_SEPARATOR_FIELD, FIELD_SEPARATOR)
 
 
 def _get_description(segment_name: str, index1: int, index2) -> str:

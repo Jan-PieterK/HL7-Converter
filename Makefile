@@ -1,5 +1,5 @@
 format:
-	isort . && black . && flake8 .
+	isort . && black --line-length=79 . && flake8 .
 
 test:
 	pytest .
