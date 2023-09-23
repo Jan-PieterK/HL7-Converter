@@ -30,6 +30,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install isort==5.11.4
       - run: |
+          ls -la
           isort --profile black --check-only .      
   unit-tests:
     # This check should be adjusted, mounting the code base
