@@ -2,9 +2,24 @@ import csv
 from io import StringIO
 from typing import Dict, List, Tuple
 
+import openpyxl
+
+from hl7._config import INDEX_SEPARATOR
+
 
 def csv_to_hl7(csv_content: str) -> str:
     return _to_hl7(_convert(csv_content))
+
+
+def excel_to_hl7(file_path: str) -> str:
+    return csv_to_hl7(
+        "\n".join(
+            ";".join(row[:3])
+            for row in openpyxl.load_workbook(file_path).active.iter_rows(
+                values_only=True, min_row=2
+            )
+        )
+    )
 
 
 def _to_hl7(hl7_data: Dict[str, List[List[str]]]) -> str:
@@ -21,24 +36,24 @@ def _to_hl7(hl7_data: Dict[str, List[List[str]]]) -> str:
 
 
 def _hl7_index_split(index: str) -> Tuple[int, int, int]:
-    index = index.split(".")
+    indexes = index.split(INDEX_SEPARATOR)
     try:
-        index_pipes = int(index[0]) - 1
+        index_pipes = int(indexes[0]) - 1
     except IndexError:
         raise ValueError("Error")
     try:
-        index_roofs = int(index[1]) - 1
+        index_roofs = int(indexes[1]) - 1
     except IndexError:
         index_roofs = 0
     try:
-        index_ands = int(index[2]) - 1
+        index_ands = int(indexes[2]) - 1
     except IndexError:
         index_ands = 0
     return index_pipes, index_roofs, index_ands
 
 
 def _convert(content: str) -> Dict[str, List[List[str]]]:
-    hl7_data = {}
+    hl7_data: Dict = {}
     data = list(csv.reader(StringIO(content), delimiter=";"))
     for segment_name, index, value in data:
         index_l1, _, _ = _hl7_index_split(index)

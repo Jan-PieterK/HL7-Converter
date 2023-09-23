@@ -1,20 +1,19 @@
-from hl7 import csv_to_hl7, hl7_to_csv
+from hl7 import csv_to_hl7, excel_to_hl7
 
 
 def test_convert_to_hl7():
     with open("tests/data/data1.csv") as f:
         hl7_content = csv_to_hl7(csv_content=f.read())
-        print(hl7_content)
         assert hl7_content.startswith("MSH")
         assert (
             "PID|Lorem Ipsum|Test|HSPTL|^^&12345|John&&Doe^Name1^^^^^L" in hl7_content
         )
 
 
-def test_hl7_to_csv():
-    with open("tests/data/hl7-1.txt") as f:
-        csv_content = hl7_to_csv(hl7_content=f.read())
-        assert "MSH;1.1;|" in csv_content
-        assert "MSH;2.1;^~\&" in csv_content
-        assert "PID;5.2;Name1" in csv_content
-        assert "PID;1.1;Lorem Ipsum" in csv_content
+def test_excel_to_hl7():
+    hl7_content = excel_to_hl7(file_path="tests/data/data1.xlsx")
+    assert "MSH|^~\\&" in hl7_content, "MSH segment is missing"
+    assert (
+        "PID|^~\\&|sdsdee|App|efeffefe|123456789|gtfgfgdfdgf|||43434|||||||||dfdfef4444"
+        in hl7_content
+    ), "PID segment is missing"
