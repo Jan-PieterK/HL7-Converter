@@ -14,7 +14,7 @@ def csv_to_hl7(csv_content: str) -> str:
 def excel_to_hl7(file_path: str) -> str:
     return csv_to_hl7(
         "\n".join(
-            ";".join(row[:3])
+            ";".join(map(str, row[:3]))
             for row in openpyxl.load_workbook(file_path).active.iter_rows(
                 values_only=True, min_row=2
             )
@@ -60,7 +60,7 @@ def _hl7_index_split(index: str) -> Tuple[int, int, int]:
 def _convert(content: str) -> Dict[str, List[List[str]]]:
     hl7_data: Dict = {}
     data = list(csv.reader(StringIO(content), delimiter=";"))
-    for segment_name, index, value in data:
+    for segment_name, index, value in map(lambda elem: elem[:3], data):
         index_l1, _, _ = _hl7_index_split(index)
         if segment_name in hl7_data:
             hl7_data[segment_name] = hl7_data[segment_name] + (
@@ -69,7 +69,7 @@ def _convert(content: str) -> Dict[str, List[List[str]]]:
         else:
             hl7_data[segment_name] = [None] * (index_l1 + 1)
 
-    for segment_name, index, value in data:
+    for segment_name, index, value in map(lambda elem: elem[:3], data):
         index_l1, index_l2, _ = _hl7_index_split(index)
 
         l2_list: List | None = hl7_data[segment_name][index_l1]
@@ -80,7 +80,7 @@ def _convert(content: str) -> Dict[str, List[List[str]]]:
         else:
             hl7_data[segment_name][index_l1] = [None] * (index_l2 + 1)
 
-    for segment_name, index, value in data:
+    for segment_name, index, value in map(lambda elem: elem[:3], data):
         index_l1, index_l2, index_l3 = _hl7_index_split(index)
         l3_list: List | None = hl7_data[segment_name][index_l1][index_l2]
         if l3_list is not None:
@@ -92,7 +92,7 @@ def _convert(content: str) -> Dict[str, List[List[str]]]:
                 index_l3 + 1
             )
 
-    for segment_name, index, value in data:
+    for segment_name, index, value in map(lambda elem: elem[:3], data):
         index_l1, index_l2, index_l3 = _hl7_index_split(index)
         hl7_data[segment_name][index_l1][index_l2][index_l3] = value
 
