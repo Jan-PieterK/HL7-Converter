@@ -14,7 +14,7 @@ def csv_to_hl7(csv_content: str) -> str:
 def excel_to_hl7(file_path: str) -> str:
     return csv_to_hl7(
         "\n".join(
-            ";".join(row[:3])
+            ";".join(map(str, row[:3]))
             for row in openpyxl.load_workbook(file_path).active.iter_rows(
                 values_only=True, min_row=2
             )
