@@ -59,7 +59,14 @@ def _hl7_index_split(index: str) -> Tuple[int, int, int]:
 
 def _convert(content: str) -> Dict[str, List[List[str]]]:
     hl7_data: Dict = {}
-    data = list(csv.reader(StringIO(content), delimiter=";"))
+    delimiters_to_try = [";", ","]
+
+    for delimiter in delimiters_to_try:
+        data = list(csv.reader(StringIO(content), delimiter=delimiter))
+
+        if len(data[0]) >= 3:
+            break
+
     for segment_name, index, value in map(lambda elem: elem[:3], data):
         index_l1, _, _ = _hl7_index_split(index)
         if segment_name in hl7_data:
