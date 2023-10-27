@@ -70,7 +70,13 @@ def _convert(hl7_content: str) -> Iterator[Tuple[str, str, str, str]]:
             for index2, field2 in enumerate(field.split("^"), start=1):
                 if not field2:
                     continue
-                description = _get_description(segment_name, index1, index2)
+                if index2 == 1:
+                   index2 = ""
+                   index1 = int(index1)
+                   description = _get_description(segment_name, index1)
+
+                else:
+                    description = _get_description(segment_name, index1, index2)
                 if "&" in field2:
                     for index3, fields3 in enumerate(
                         field2.split("&"), start=1
@@ -93,8 +99,13 @@ def _prepare_csv_content(csv_content: str) -> str:
     ).replace(_FIELD_SEPARATOR_FIELD, FIELD_SEPARATOR)
 
 
-def _get_description(segment_name: str, index1: int, index2) -> str:
-    key_json = f"{segment_name}.{index1}.{index2}"
+def _get_description(segment_name: str, index1: int, index2=None) -> str:
+    if index2 is not None:
+        key_json = f"{segment_name}.{index1}.{index2}"
+    else:
+        key_json = f"{segment_name}.{index1}"
+
     if key_json in HL7_META_DATA:
         return HL7_META_DATA[key_json]["name"]
     return "Description not found"
+

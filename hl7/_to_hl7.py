@@ -37,7 +37,10 @@ def _to_hl7(hl7_data: Dict[str, List[List[str]]]) -> str:
             ]
         )
         message += f"{segment_name}|{segment_value}\n"
-    return message.replace("MSH|||", "MSH|")
+    if message.startswith("MSH|||"):
+        return message.replace("MSH|||", "MSH|")
+    if message.startswith("MSH||"):
+        return message.replace("MSH||", "MSH|")
 
 
 def _hl7_index_split(index: str) -> Tuple[int, int, int]:
