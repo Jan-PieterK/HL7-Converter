@@ -71,10 +71,7 @@ def _convert(hl7_content: str) -> Iterator[Tuple[str, str, str, str]]:
                 if not field2:
                     continue
                 if index2 == 1:
-                   index2 = ""
-                   index1 = int(index1)
-                   description = _get_description(segment_name, index1)
-
+                    description = _get_description(segment_name, int(index1))
                 else:
                     description = _get_description(segment_name, index1, index2)
                 if "&" in field2:

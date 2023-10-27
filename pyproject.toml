@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "py-hl7"
-version = "0.0.3"
+version = "0.0.5"
 description = "Converter for HL7 messages to and from multiple formats (Excel, CSV)"
 authors = ["CISolutions B.V. <info@cisolutions.nl>"]
 license = "MIT"
