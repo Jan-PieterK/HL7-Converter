@@ -62,6 +62,7 @@ def hl7_to_excel(hl7_content):
 
 def _convert(hl7_content: str) -> Iterator[Tuple[str, str, str, str]]:
     for segment in hl7_content.split("\n"):
+        segment = segment.strip()
         fields1 = segment.split(FIELD_SEPARATOR)
         segment_name = fields1[0]
         for index1, field in enumerate(fields1[1:], start=1):
