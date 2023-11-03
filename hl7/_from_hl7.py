@@ -74,11 +74,15 @@ def _convert(hl7_content: str) -> Iterator[Tuple[str, str, str, str]]:
                 if index2 == 1:
                     description = _get_description(segment_name, int(index1))
                 else:
-                    description = _get_description(segment_name, index1, index2)
+                    description = _get_description(segment_name, int(index1), int(index2))
                 if "&" in field2:
                     for index3, fields3 in enumerate(
                         field2.split("&"), start=1
                     ):
+                        if index3 == 1:
+                            description = _get_description(segment_name, int(index1), int(index2))
+                        else:
+                            description = _get_description(segment_name, int(index1), int(index2), int(index3))
                         yield segment_name, f"{index1}.{index2}.{index3}", fields3, description
                 else:
                     yield segment_name, f"{index1}.{index2}", field2, description
@@ -97,7 +101,7 @@ def _prepare_csv_content(csv_content: str) -> str:
     ).replace(_FIELD_SEPARATOR_FIELD, FIELD_SEPARATOR)
 
 
-def _get_description(segment_name: str, index1: int, index2=None) -> str:
+def _get_description(segment_name: str, index1: int, index2: int | None = None, index3: int | None = None) -> str:
     if index2 is not None:
         key_json = f"{segment_name}.{index1}.{index2}"
     else:
