@@ -62,6 +62,7 @@ def hl7_to_excel(hl7_content):
 
 def _convert(hl7_content: str) -> Iterator[Tuple[str, str, str, str]]:
     for segment in hl7_content.split("\n"):
+        segment = segment.strip()
         fields1 = segment.split(FIELD_SEPARATOR)
         segment_name = fields1[0]
         for index1, field in enumerate(fields1[1:], start=1):
@@ -70,11 +71,18 @@ def _convert(hl7_content: str) -> Iterator[Tuple[str, str, str, str]]:
             for index2, field2 in enumerate(field.split("^"), start=1):
                 if not field2:
                     continue
-                description = _get_description(segment_name, index1, index2)
+                if index2 == 1:
+                    description = _get_description(segment_name, int(index1))
+                else:
+                    description = _get_description(segment_name, int(index1), int(index2))
                 if "&" in field2:
                     for index3, fields3 in enumerate(
                         field2.split("&"), start=1
                     ):
+                        if index3 == 1:
+                            description = _get_description(segment_name, int(index1), int(index2))
+                        else:
+                            description = _get_description(segment_name, int(index1), int(index2), int(index3))
                         yield segment_name, f"{index1}.{index2}.{index3}", fields3, description
                 else:
                     yield segment_name, f"{index1}.{index2}", field2, description
@@ -93,8 +101,13 @@ def _prepare_csv_content(csv_content: str) -> str:
     ).replace(_FIELD_SEPARATOR_FIELD, FIELD_SEPARATOR)
 
 
-def _get_description(segment_name: str, index1: int, index2) -> str:
-    key_json = f"{segment_name}.{index1}.{index2}"
+def _get_description(segment_name: str, index1: int, index2: int | None = None, index3: int | None = None) -> str:
+    if index2 is not None:
+        key_json = f"{segment_name}.{index1}.{index2}"
+    else:
+        key_json = f"{segment_name}.{index1}"
+
     if key_json in HL7_META_DATA:
         return HL7_META_DATA[key_json]["name"]
     return "Description not found"
+
